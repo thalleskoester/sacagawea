@@ -6,6 +6,10 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = []
 
+[build-system]
+requires = ["setuptools>=80"]
+build-backend = "setuptools.build_meta"
+
 [dependency-groups]
 dev = [
     "pre-commit>=4.3.0",
@@ -15,14 +19,10 @@ dev = [
 ]
 
 [tool.uv]
-# This template variation is for app-only projects. Library/package templates
-# should remove this and declare their build backend and package discovery
-# explicitly.
 package = true
 
-[tool.setuptools]
-packages = []
-py-modules = []
+[tool.setuptools.packages.find]
+where = ["src"]
 
 # The team template assumes the standard `src/` package layout and the
 # `storage/cache/ruff` Ruff cache path from `ruff.base.toml`.
