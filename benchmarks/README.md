@@ -32,6 +32,18 @@ Compare two JSON result files:
 uv run python -m benchmarks.run_benchmarks compare benchmarks/results-medium.json benchmarks/results-large.json
 ```
 
+Sort the final result table:
+
+```powershell
+uv run python -m benchmarks.run_benchmarks -d medium -o interpret --sort median-ms --descending
+```
+
+Sort a comparison table:
+
+```powershell
+uv run python -m benchmarks.run_benchmarks compare benchmarks/results-medium.json benchmarks/results-large.json --sort contender-ms-per-1k --descending
+```
+
 List available cases:
 
 ```powershell

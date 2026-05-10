@@ -63,6 +63,32 @@ class OperationOption(StrEnum):
     evaluate = "evaluate"
 
 
+class ResultSortOption(StrEnum):
+    """Sort keys accepted by the benchmark results table."""
+
+    dataset = "dataset"
+    size = "size"
+    operation = "operation"
+    case = "case"
+    median_ms = "median-ms"
+    min_ms = "min-ms"
+    max_ms = "max-ms"
+    matches = "matches"
+
+
+class ComparisonSortOption(StrEnum):
+    """Sort keys accepted by the benchmark comparison table."""
+
+    case = "case"
+    operation = "operation"
+    baseline_ms = "baseline-ms"
+    contender_ms = "contender-ms"
+    ratio = "ratio"
+    baseline_ms_per_1k = "baseline-ms-per-1k"
+    contender_ms_per_1k = "contender-ms-per-1k"
+    contender_spread = "contender-spread"
+
+
 @dataclass(frozen=True, slots=True)
 class BenchmarkMeasurement:
     """Timing result for one case and operation."""
@@ -264,6 +290,20 @@ def main(
             help="Suppress progress messages and print only the final result table.",
         ),
     ] = False,
+    sort: Annotated[
+        ResultSortOption | None,
+        typer.Option(
+            "--sort",
+            help="Sort the final result table by one measurement column. Omit it to keep benchmark execution order.",
+        ),
+    ] = None,
+    descending: Annotated[
+        bool,
+        typer.Option(
+            "--descending",
+            help="Sort the final result table in descending order. Has no effect unless --sort is supplied.",
+        ),
+    ] = False,
 ) -> None:
     """Run selected benchmark cases against generated datasets."""
     if context.invoked_subcommand is not None:
@@ -298,7 +338,7 @@ def main(
     except AssertionError as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=1) from exc
-    _print_measurements(console, measurements)
+    _print_measurements(console, measurements, sort=sort, descending=descending)
     if output is not None:
         _write_json(output, measurements)
 
@@ -317,12 +357,27 @@ def compare(
             help="Path to the contender benchmark JSON file, usually the larger or newer run.",
         ),
     ],
+    *,
+    sort: Annotated[
+        ComparisonSortOption | None,
+        typer.Option(
+            "--sort",
+            help="Sort the comparison table by one comparison column. Omit it to keep case/operation order.",
+        ),
+    ] = None,
+    descending: Annotated[
+        bool,
+        typer.Option(
+            "--descending",
+            help="Sort the comparison table in descending order. Has no effect unless --sort is supplied.",
+        ),
+    ] = False,
 ) -> None:
     """Compare two benchmark JSON files by case and operation."""
     console = Console()
     baseline_rows = _read_measurements_json(baseline)
     contender_rows = _read_measurements_json(contender)
-    _print_comparison(console, baseline_rows, contender_rows)
+    _print_comparison(console, baseline_rows, contender_rows, sort=sort, descending=descending)
 
 
 def _resolve_cases(selected_cases: tuple[str, ...] | None) -> tuple[QueryCase, ...]:
@@ -513,17 +568,23 @@ def _print_available_cases(console: Console) -> None:
     console.print(table)
 
 
-def _print_measurements(console: Console, measurements: list[BenchmarkMeasurement]) -> None:
+def _print_measurements(
+    console: Console,
+    measurements: list[BenchmarkMeasurement],
+    *,
+    sort: ResultSortOption | None,
+    descending: bool,
+) -> None:
     table = Table(title="Benchmark Results")
     table.add_column("Dataset", style="cyan")
     table.add_column("Size", justify="right")
-    table.add_column("Operation", style="magenta")
-    table.add_column("Case")
+    table.add_column("Operation", style="magenta", no_wrap=True)
+    table.add_column("Case", no_wrap=True)
     table.add_column("Median ms", justify="right")
     table.add_column("Min ms", justify="right")
     table.add_column("Max ms", justify="right")
     table.add_column("Matches", justify="right")
-    for measurement in measurements:
+    for measurement in _sort_measurements(measurements, sort=sort, descending=descending):
         table.add_row(
             measurement.dataset,
             str(measurement.dataset_size),
@@ -541,6 +602,9 @@ def _print_comparison(
     console: Console,
     baseline_rows: list[BenchmarkMeasurement],
     contender_rows: list[BenchmarkMeasurement],
+    *,
+    sort: ComparisonSortOption | None,
+    descending: bool,
 ) -> None:
     baseline_index = _index_measurements(baseline_rows)
     contender_index = _index_measurements(contender_rows)
@@ -550,8 +614,8 @@ def _print_comparison(
         return
 
     table = Table(title="Benchmark Comparison")
-    table.add_column("Case")
-    table.add_column("Operation", style="magenta")
+    table.add_column("Case", no_wrap=True)
+    table.add_column("Operation", style="magenta", no_wrap=True)
     table.add_column("Baseline ms", justify="right")
     table.add_column("Contender ms", justify="right")
     table.add_column("Ratio", justify="right")
@@ -562,9 +626,9 @@ def _print_comparison(
     baseline_label = _dataset_summary(baseline_rows)
     contender_label = _dataset_summary(contender_rows)
     console.print(f"[dim]Baseline: {baseline_label} | Contender: {contender_label}[/]")
-    for key in common_keys:
-        baseline = baseline_index[key]
-        contender = contender_index[key]
+    comparison_rows = [(baseline_index[key], contender_index[key]) for key in common_keys]
+    comparison_rows = _sort_comparison_rows(comparison_rows, sort=sort, descending=descending)
+    for baseline, contender in comparison_rows:
         ratio = contender.median_ms / baseline.median_ms if baseline.median_ms else 0.0
         contender_spread = contender.max_ms / contender.min_ms if contender.min_ms else 0.0
         row_style = "yellow" if ratio >= 12.0 or contender_spread >= 1.5 else None
@@ -580,6 +644,68 @@ def _print_comparison(
             style=row_style,
         )
     console.print(table)
+
+
+def _sort_measurements(
+    measurements: list[BenchmarkMeasurement],
+    *,
+    sort: ResultSortOption | None,
+    descending: bool,
+) -> list[BenchmarkMeasurement]:
+    if sort is None:
+        return measurements
+    return sorted(measurements, key=lambda measurement: _measurement_sort_value(measurement, sort), reverse=descending)
+
+
+def _measurement_sort_value(measurement: BenchmarkMeasurement, sort: ResultSortOption) -> str | int | float:
+    if sort == ResultSortOption.dataset:
+        return measurement.dataset
+    if sort == ResultSortOption.size:
+        return measurement.dataset_size
+    if sort == ResultSortOption.operation:
+        return measurement.operation
+    if sort == ResultSortOption.case:
+        return measurement.case_name
+    if sort == ResultSortOption.median_ms:
+        return measurement.median_ms
+    if sort == ResultSortOption.min_ms:
+        return measurement.min_ms
+    if sort == ResultSortOption.max_ms:
+        return measurement.max_ms
+    return measurement.expected_matches
+
+
+def _sort_comparison_rows(
+    rows: list[tuple[BenchmarkMeasurement, BenchmarkMeasurement]],
+    *,
+    sort: ComparisonSortOption | None,
+    descending: bool,
+) -> list[tuple[BenchmarkMeasurement, BenchmarkMeasurement]]:
+    if sort is None:
+        return rows
+    return sorted(rows, key=lambda row: _comparison_sort_value(row[0], row[1], sort), reverse=descending)
+
+
+def _comparison_sort_value(
+    baseline: BenchmarkMeasurement, contender: BenchmarkMeasurement, sort: ComparisonSortOption
+) -> str | float:
+    ratio = contender.median_ms / baseline.median_ms if baseline.median_ms else 0.0
+    contender_spread = contender.max_ms / contender.min_ms if contender.min_ms else 0.0
+    if sort == ComparisonSortOption.case:
+        return baseline.case_name
+    if sort == ComparisonSortOption.operation:
+        return baseline.operation
+    if sort == ComparisonSortOption.baseline_ms:
+        return baseline.median_ms
+    if sort == ComparisonSortOption.contender_ms:
+        return contender.median_ms
+    if sort == ComparisonSortOption.ratio:
+        return ratio
+    if sort == ComparisonSortOption.baseline_ms_per_1k:
+        return _milliseconds_per_thousand_records(baseline)
+    if sort == ComparisonSortOption.contender_ms_per_1k:
+        return _milliseconds_per_thousand_records(contender)
+    return contender_spread
 
 
 def _index_measurements(measurements: list[BenchmarkMeasurement]) -> dict[tuple[str, str], BenchmarkMeasurement]:

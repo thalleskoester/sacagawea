@@ -60,3 +60,6 @@ Compare saved benchmark JSON files with:
 ```powershell
 uv run python -m benchmarks.run_benchmarks compare benchmarks/results-medium.json benchmarks/results-large.json
 ```
+
+Both benchmark result tables and comparison tables support `--sort` plus
+`--descending`.

@@ -122,3 +122,56 @@ def test_benchmark_cli_compares_result_files(tmp_path):
     assert "Baseline:" in result.output
     assert "parse" in result.output
     assert "Ratio" in result.output
+
+
+def test_benchmark_cli_sorts_results_table():
+    result = RUNNER.invoke(
+        app,
+        [
+            "--dataset",
+            "small",
+            "--case",
+            "scalar_eq",
+            "--case",
+            "many_args",
+            "--operation",
+            "interpret",
+            "--repeat",
+            "1",
+            "--warmup",
+            "0",
+            "--sort",
+            "median-ms",
+            "--descending",
+            "--quiet",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert result.output.find("many_args") < result.output.find("scalar_eq")
+
+
+def test_benchmark_cli_sorts_comparison_table(tmp_path):
+    baseline = run_benchmark_suite(
+        dataset_name="small",
+        selected_cases=("scalar_eq", "many_args"),
+        selected_operations=("interpret",),
+        repeat=1,
+        warmup=0,
+    )
+    contender = run_benchmark_suite(
+        dataset_name="small",
+        selected_cases=("scalar_eq", "many_args"),
+        selected_operations=("interpret",),
+        repeat=1,
+        warmup=0,
+    )
+    baseline_path = tmp_path / "baseline.json"
+    contender_path = tmp_path / "contender.json"
+    baseline_path.write_text(json.dumps([asdict(item) for item in baseline]), encoding="utf-8")
+    contender_path.write_text(json.dumps([asdict(item) for item in contender]), encoding="utf-8")
+
+    result = RUNNER.invoke(app, ["compare", str(baseline_path), str(contender_path), "--sort", "baseline-ms"])
+
+    assert result.exit_code == 0
+    assert "Benchmark Comparison" in result.output
