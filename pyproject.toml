@@ -1,0 +1,90 @@
+[project]
+name = "sacagawea"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.3.0",
+    "pytest==9.0.3",
+    "ruff==0.15.10",
+    "ty==0.0.30",
+]
+
+[tool.uv]
+# This template variation is for app-only projects. Library/package templates
+# should remove this and declare their build backend and package discovery
+# explicitly.
+package = true
+
+[tool.setuptools]
+packages = []
+py-modules = []
+
+# The team template assumes the standard `src/` package layout and the
+# `storage/cache/ruff` Ruff cache path from `ruff.base.toml`.
+# If a project intentionally uses a different layout, override local settings
+# such as `[tool.pytest.ini_options].pythonpath` or `[tool.ruff].cache-dir` in
+# this file instead of changing the shared `ruff.base.toml`.
+[tool.pytest.ini_options]
+addopts = ["--strict-config", "--basetemp=storage/tmp/pytest"]
+cache_dir = "storage/cache/pytest"
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+extend = "./ruff.base.toml"
+
+[tool.ruff.lint]
+# Use the follwing property to enable some linting rule that makes sence to 
+# your project. 
+# 
+# We have a few set that you can chose from. If you think that more then one
+# apply to our use case, you can combine the sets into one `extend-select`
+# property.
+#
+# SETS:
+#   Async Project:
+#      "ASYNC100", "ASYNC105", "ASYNC109", "ASYNC110", "ASYNC115",
+#      "ASYNC116", "ASYNC210", "ASYNC212", "ASYNC220", "ASYNC221",
+#      "ASYNC222", "ASYNC230", "ASYNC240", "ASYNC250", "ASYNC251"
+#
+#   Doc-Havy Projects:
+#      "D100", "D101", "D102", "D103", "D104", "D105", "D106", "D107",
+#      "D200", "D201", "D202", "D204", "D205", "D207", "D208", "D209",
+#      "D210", "D211", "D214", "D215", "D301", "D400", "D401", "D402",
+#      "D403", "D404", "D405", "D406", "D407", "D408", "D409", "D410",
+#      "D411", "D412", "D413", "D414", "D415", "D416", "D418", "D419",
+#      "D420"
+#
+#   FastAPI Project:
+#      "FAST001", "FAST002", "FAST003"
+#
+#   Pandas Project (Pandas + Numpy):
+#      "NPY001", "NPY002", "NPY003", "NPY201", "PD002", "PD003", "PD004", 
+#      "PD007", "PD008", "PD009", "PD010",  "PD011", "PD012", "PD013", 
+#      "PD015", "PD101"
+#
+#   Projects with python stubs:
+#      "PYI001", "PYI002", "PYI003", "PYI004", "PYI005", "PYI006", 
+#      "PYI007", "PYI008", "PYI009", "PYI010", "PYI011", "PYI012",
+#      "PYI013", "PYI014", "PYI015", "PYI016", "PYI017", "PYI018",
+#      "PYI019", "PYI020", "PYI021", "PYI024", "PYI025", "PYI026",
+#      "PYI029", "PYI030", "PYI032", "PYI033", "PYI034", "PYI035",
+#      "PYI036", "PYI041", "PYI042", "PYI043", "PYI044", "PYI045",
+#      "PYI046", "PYI047", "PYI048", "PYI049", "PYI050", "PYI051",
+#      "PYI052", "PYI053", "PYI054", "PYI055", "PYI056", "PYI057",
+#      "PYI058", "PYI059", "PYI061", "PYI062", "PYI063", "PYI064",
+#      "PYI066"
+#
+extend-select = [
+	"D100", "D101", "D102", "D103", "D104", "D105", "D106", "D107",
+    "D200", "D201", "D202", "D204", "D205", "D207", "D208", "D209",
+    "D210", "D211", "D214", "D215", "D301", "D400", "D401", "D402",
+    "D403", "D404", "D405", "D406", "D407", "D408", "D409", "D410",
+    "D411", "D412", "D413", "D414", "D415", "D416", "D418", "D419",
+    "D420"
+]

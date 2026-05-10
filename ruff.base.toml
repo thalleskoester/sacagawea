@@ -1,0 +1,318 @@
+cache-dir = "./storage/cache/ruff"
+force-exclude = true
+indent-width = 4
+line-length = 120
+
+[format]
+# Enable reformatting of code snippets in docstrings.
+docstring-code-format = true
+# Format all docstring code snippets using a stricter fixed line length than
+# the surrounding Python code.
+docstring-code-line-length = 88
+exclude = []
+indent-style = "space"
+line-ending = "auto"
+nested-string-quote-style = "alternating"
+# Disable preview style formatting until the team has reviewed it.
+preview = false
+quote-style = "double"
+skip-magic-trailing-comma = false
+
+[lint]
+allowed-confusables = []
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+exclude = []
+explicit-preview-rules = true
+external = []
+fixable = ["ALL"]
+future-annotations = true
+preview = true
+task-tags = ["TODO", "FIXME"]
+typing-extensions = true
+typing-modules = []
+unfixable = []
+select = [
+    # OK
+    "A001", "A002", "A003", "A004", "A005", "A006",
+    "ANN001", "ANN002", "ANN003", "ANN201", "ANN202", "ANN204",
+    "ANN205", "ANN206", "ANN401",
+    # OK
+    "ARG001", "ARG002", "ARG003", "ARG004", "ARG005",
+    "B002", "B003", "B004", "B005", "B006", "B007", "B008", "B009",
+    "B010", "B011", "B012", "B013", "B014", "B015", "B016", "B017",
+    "B018", "B019", "B020", "B021", "B022", "B023", "B024", "B025",
+    "B026", "B027", "B028", "B029", "B030", "B031", "B032", "B033",
+    "B034", "B035", "B039", "B043", "B901", "B903", "B904", "B905",
+    "B909", "B911", "B912",
+    "BLE001",
+    # OK
+    "C400", "C401", "C402", "C403", "C404", "C405", "C406", "C408",
+    "C409", "C410", "C411", "C413", "C414", "C415", "C416", "C417",
+    "C418", "C419", "C420",
+    # OK
+    "DOC102", "DOC201", "DOC202", "DOC402", "DOC403", "DOC501",
+    # OK
+    "DTZ001", "DTZ002", "DTZ003", "DTZ004", "DTZ005", "DTZ006",
+    "DTZ007", "DTZ011", "DTZ012", "DTZ901",
+    "E401", "E402", "E701", "E702", "E703", "E711", "E712", "E713",
+    "E714", "E721", "E722", "E731", "E741", "E742", "E743", "E902",
+    # OK
+    "EM101", "EM102", "EM103",
+    "F401", "F402", "F403", "F404", "F405", "F406", "F407", "F501",
+    "F502", "F503", "F504", "F505", "F506", "F507", "F508", "F509",
+    "F521", "F522", "F523", "F524", "F525", "F541", "F601", "F602",
+    "F621", "F622", "F631", "F632", "F633", "F634", "F701", "F702",
+    "F704", "F706", "F707", "F722", "F811", "F821", "F822", "F823",
+    "F841", "F842", "F901",
+    # OK
+    "FA100", "FA102",
+    "FBT001", "FBT002", "FBT003",
+    # OK
+    "FLY002",
+    # OK
+    "G001", "G002", "G003", "G004", "G010", "G101", "G201", "G202",
+    # High
+    "I001", "I002",
+    # OK
+    "ICN001", "ICN002", "ICN003",
+    # OK
+    "INP001",
+    # OK
+    "LOG001", "LOG002", "LOG004", "LOG007", "LOG009", "LOG014",
+    "LOG015",
+    # OK
+    "N801", "N802", "N803", "N804", "N805", "N806", "N807", "N811",
+    "N812", "N813", "N814", "N815", "N816", "N817", "N818", "N999",
+    # OK
+    "PIE790", "PIE794", "PIE796", "PIE800", "PIE804", "PIE807",
+    "PIE808", "PIE810",
+    "PT001", "PT002", "PT003", "PT006", "PT007", "PT008", "PT009",
+    "PT010", "PT011", "PT012", "PT013", "PT014", "PT015", "PT016",
+    "PT017", "PT018", "PT019", "PT020", "PT021", "PT022", "PT023",
+    "PT024", "PT025", "PT026", "PT027", "PT028", "PT029", "PT030",
+    "PT031",
+    # OK
+    "PTH100", "PTH101", "PTH102", "PTH103", "PTH104", "PTH105",
+    "PTH106", "PTH107", "PTH108", "PTH109", "PTH110", "PTH111",
+    "PTH112", "PTH113", "PTH114", "PTH115", "PTH116", "PTH117",
+    "PTH118", "PTH119", "PTH120", "PTH121", "PTH122", "PTH123",
+    "PTH124", "PTH201", "PTH202", "PTH203", "PTH204", "PTH205",
+    "PTH206", "PTH207", "PTH208", "PTH210", "PTH211",
+    # High
+    "RET501", "RET502", "RET503", "RET504", "RET505", "RET506",
+    "RET507", "RET508",
+    # High
+    "RSE102",
+    # Low
+    "RUF001", "RUF002", "RUF003", "RUF005", "RUF006", "RUF007",
+    "RUF008", "RUF009", "RUF010", "RUF012", "RUF013", "RUF015",
+    "RUF016", "RUF017", "RUF018", "RUF019", "RUF020", "RUF021",
+    "RUF022", "RUF023", "RUF024", "RUF026", "RUF027", "RUF028",
+    "RUF029", "RUF030", "RUF031", "RUF032", "RUF033", "RUF034",
+    "RUF036", "RUF037", "RUF038", "RUF039", "RUF040", "RUF041",
+    "RUF043", "RUF045", "RUF046", "RUF047", "RUF048", "RUF049",
+    "RUF050", "RUF051", "RUF052", "RUF053", "RUF054", "RUF055",
+    "RUF056", "RUF057", "RUF058", "RUF059", "RUF060", "RUF061",
+    "RUF063", "RUF064", "RUF065", "RUF066", "RUF067", "RUF068",
+    "RUF069", "RUF070", "RUF071", "RUF072", "RUF073", "RUF100",
+    "RUF101", "RUF102", "RUF103",
+    "S101", "S102", "S103", "S104", "S105", "S106", "S107", "S108",
+    "S110", "S112", "S113", "S201", "S202", "S301", "S302", "S303",
+    "S304", "S305", "S306", "S307", "S308", "S310", "S311", "S312",
+    "S313", "S314", "S315", "S316", "S317", "S318", "S319", "S321",
+    "S323", "S324", "S401", "S402", "S403", "S404", "S405", "S406",
+    "S407", "S408", "S409", "S411", "S412", "S413", "S415", "S501",
+    "S502", "S503", "S504", "S505", "S506", "S507", "S508", "S509",
+    "S601", "S602", "S603", "S604", "S605", "S606", "S607", "S608",
+    "S609", "S610", "S611", "S612", "S701", "S702", "S704",
+    # High
+    "SIM101", "SIM102", "SIM103", "SIM105", "SIM107", "SIM108",
+    "SIM109", "SIM110", "SIM112", "SIM113", "SIM114", "SIM115",
+    "SIM116", "SIM117", "SIM118", "SIM201", "SIM202", "SIM208",
+    "SIM210", "SIM211", "SIM212", "SIM220", "SIM221", "SIM222",
+    "SIM223", "SIM300", "SIM401", "SIM905", "SIM910",
+    # High
+    "SLOT000", "SLOT001", "SLOT002",
+    # High
+    "T100", "T201", "T203",
+    # OK
+    "TC001", "TC002", "TC003", "TC004", "TC005", "TC006", "TC007",
+    "TC008",
+    # High
+    "UP001", "UP003", "UP004", "UP005", "UP006", "UP007", "UP008",
+    "UP009", "UP010", "UP011", "UP012", "UP013", "UP014", "UP015",
+    "UP017", "UP018", "UP019", "UP020", "UP021", "UP022", "UP023",
+    "UP024", "UP025", "UP026", "UP028", "UP029", "UP030", "UP031",
+    "UP032", "UP033", "UP034", "UP035", "UP036", "UP037", "UP039",
+    "UP040", "UP041", "UP042", "UP043", "UP044", "UP045", "UP046",
+    "UP047", "UP049", "UP050",
+    # OK
+    "W291", "W292", "W293", "W391", "W505", "W605",
+    # Medium
+    "YTT101", "YTT102", "YTT103", "YTT201", "YTT202", "YTT203",
+    "YTT204", "YTT301", "YTT302", "YTT303",
+]
+ignore = [
+    # Ruff formatter compatibility.
+    "COM812",
+    "COM819",
+    "D206",
+    "D212",
+    "D213",
+    "D300",
+    "E111",
+    "E114",
+    "E117",
+    "ISC001",
+    "ISC002",
+    "Q000",
+    "Q001",
+    "Q002",
+    "Q003",
+    "W191",
+    "D203",
+    "D417",
+    "DOC502"
+]
+
+[lint.per-file-ignores]
+"**/*.pyi" = [
+    "D"
+]
+"tests/**.py" = [
+    "ANN001", "ANN002", "ANN003", "ANN201", "ANN202", "ANN204",
+    "ANN205", "ANN206", "ANN401",
+    "ARG001", "ARG002", "ARG003", "ARG004", "ARG005",
+    "D",
+    "DOC102", "DOC201", "DOC202", "DOC402", "DOC403", "DOC501",
+    "EM101", "EM102", "EM103",
+    "INP001",
+    "S101"
+]
+
+[lint.flake8-annotations]
+allow-star-arg-any = false
+ignore-fully-untyped = false
+mypy-init-return = false
+suppress-dummy-args = false
+suppress-none-returning = false
+
+[lint.flake8-bugbear]
+# Framework-specific defaults stay in the shared base so projects get the same
+# behavior when they enable related rule sets from `pyproject.toml`.
+extend-immutable-calls = [
+    "fastapi.Body",
+    "fastapi.Cookie",
+    "fastapi.Depends",
+    "fastapi.File",
+    "fastapi.Form",
+    "fastapi.Header",
+    "fastapi.Path",
+    "fastapi.Query",
+    "fastapi.Security",
+]
+
+[lint.flake8-builtins]
+ignorelist = ["id"]
+strict-checking = true
+
+[lint.flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false
+parametrize-names-type = "tuple"
+parametrize-values-row-type = "tuple"
+parametrize-values-type = "list"
+
+[lint.flake8-type-checking]
+exempt-modules = [
+    "typing",
+    "typing_extensions"
+]
+runtime-evaluated-base-classes = [
+    "pydantic.BaseModel",
+    "pydantic.RootModel",
+    "pydantic_settings.BaseSettings",
+    "sqlalchemy.orm.DeclarativeBase",
+]
+runtime-evaluated-decorators = [
+    "attr.attrs",
+    "attr.define",
+    "attr.frozen",
+    "attr.s",
+    "attrs.define",
+    "attrs.frozen",
+    "attrs.mutable",
+    "fastapi.APIRouter.api_route",
+    "fastapi.APIRouter.delete",
+    "fastapi.APIRouter.get",
+    "fastapi.APIRouter.head",
+    "fastapi.APIRouter.options",
+    "fastapi.APIRouter.patch",
+    "fastapi.APIRouter.post",
+    "fastapi.APIRouter.put",
+    "fastapi.APIRouter.trace",
+    "fastapi.APIRouter.websocket",
+    "fastapi.APIRouter.websocket_route",
+    "fastapi.FastAPI.api_route",
+    "fastapi.FastAPI.delete",
+    "fastapi.FastAPI.get",
+    "fastapi.FastAPI.head",
+    "fastapi.FastAPI.options",
+    "fastapi.FastAPI.patch",
+    "fastapi.FastAPI.post",
+    "fastapi.FastAPI.put",
+    "fastapi.FastAPI.trace",
+    "fastapi.FastAPI.websocket",
+    "fastapi.FastAPI.websocket_route",
+    "fastmcp.FastMCP.custom_route",
+    "fastmcp.FastMCP.prompt",
+    "fastmcp.FastMCP.resource",
+    "fastmcp.FastMCP.tool",
+    "fastmcp.prompts.prompt",
+    "fastmcp.resources.resource",
+    "fastmcp.tools.tool",
+    "pydantic.dataclasses.dataclass",
+    "pydantic.validate_call",
+    "typer.Typer.callback",
+    "typer.Typer.command",
+]
+
+[lint.flake8-unused-arguments]
+ignore-variadic-names = true
+
+[lint.flake8-import-conventions.extend-aliases]
+"matplotlib" = "mpl"
+"matplotlib.pyplot" = "plt"
+"numpy" = "np"
+"numpy.typing" = "npt"
+"pandas" = "pd"
+"tensorflow" = "tf"
+
+[lint.pep8-naming]
+classmethod-decorators = [
+    # Do not add `pydantic.model_validator` here; `mode="after"` validators
+    # are instance methods, while before/wrap validators should use an
+    # explicit `@classmethod`.
+    "pydantic.field_validator",
+    "pydantic.root_validator",
+    "pydantic.validator",
+    "declared_attr",
+    "expression",
+    "comparator"
+]
+
+[lint.pycodestyle]
+ignore-overlong-task-comments = true
+max-doc-length = 88
+
+[lint.pydoclint]
+ignore-one-line-docstrings = true
+
+[lint.pydocstyle]
+convention = "pep257"
+ignore-decorators = [
+    "typing.overload"
+]
+
+[lint.pyupgrade]
+keep-runtime-typing = true

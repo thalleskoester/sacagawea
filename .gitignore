@@ -1,0 +1,22 @@
+.env
+.idea/
+uv-cache/
+test-tmp/
+.pytest-tmp/
+.pytest_cache/
+.pre-commit-cache/
+pytest-cache-files-*/
+storage/cache/
+storage/logs/*
+!storage/logs/.gitkeep
+
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv/
