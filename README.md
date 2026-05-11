@@ -40,3 +40,26 @@ Regex matching is case-sensitive and uses Python regex semantics by default. Hos
 Custom global functions are configured through `FilterConfig.global_functions`. They receive a runtime context and AST argument expressions, and their raw Python return value is classified through the same runtime value model used for record data.
 
 Field visibility is the host application's responsibility. v1 does not include allowlists, denylists, SQL translation, ORM translation, object attribute access, or Python object-instance traversal.
+
+## Benchmarks
+
+The `benchmarks/` directory contains deterministic generated datasets and named
+query workloads for parse, interpret, and end-to-end evaluation timing. The CLI
+uses Rich tables and progress output while measurements run.
+
+```powershell
+uv run python -m benchmarks.run_benchmarks --dataset small
+```
+
+Use `uv run python -m benchmarks.run_benchmarks --help` for documented
+parameters, and `uv run python -m benchmarks.run_benchmarks --list` to see
+available cases.
+
+Compare saved benchmark JSON files with:
+
+```powershell
+uv run python -m benchmarks.run_benchmarks compare benchmarks/results-medium.json benchmarks/results-large.json
+```
+
+Both benchmark result tables and comparison tables support `--sort` plus
+`--descending`.
